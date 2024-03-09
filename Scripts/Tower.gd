@@ -23,7 +23,6 @@ func _ready() -> void:
 	$ShootTimer.wait_time = shooting_interval
 
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
@@ -41,6 +40,8 @@ func _on_timer_timeout() -> void:
 	if enemies.size() <= 0:
 		return
 	var target = enemies[0];
+	var target_location = target.global_transform.origin
+	rotation = atan2(target_location.y - global_position.y, target_location.x - global_position.x)
 	var shot = projectile.instantiate()
 	shot.speed = projectile_speed
 	shot.set_target(target)

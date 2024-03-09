@@ -11,7 +11,7 @@ func set_target(new_target: Area2D) -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if target:
+	if target != null:
 		velocity = ((target.get_global_transform().origin - position).normalized() * speed)
 		position += velocity * delta
 		rotation = velocity.angle()

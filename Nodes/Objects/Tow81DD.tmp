@@ -9,7 +9,9 @@
 [node name="Tower" type="Area2D"]
 script = ExtResource("1_d40a5")
 range = 200
+shooting_interval = null
 projectile_speed = 100
+targeting_mode = null
 projectile = ExtResource("2_a8vvv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -17,14 +19,13 @@ shape = SubResource("CircleShape2D_lblnr")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
-rotation = 4.71239
 texture = ExtResource("2_ybi5f")
 
 [node name="ShootTimer" type="Timer" parent="."]
 autostart = true
 
 [node name="ProjectileLocation" type="Marker2D" parent="."]
-position = Vector2(12, 0)
+position = Vector2(0, 13)
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]
