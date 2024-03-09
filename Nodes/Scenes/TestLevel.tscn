@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://b3fvvjakbqhq5"]
+[gd_scene load_steps=16 format=3 uid="uid://b3fvvjakbqhq5"]
 
-[ext_resource type="Texture2D" uid="uid://bfq2dkqb3nfhp" path="res://Assets/Art/Tilesets/TX Tileset Grass.png" id="1_c0bcn"]
+[ext_resource type="Texture2D" uid="uid://2c3w74gw5rsu" path="res://Assets/Art/Tilesets/TX Tileset Grass.png" id="1_c0bcn"]
 [ext_resource type="Script" path="res://Scripts/TestLevel.gd" id="1_p2eop"]
 [ext_resource type="PackedScene" uid="uid://b02kru1ialv73" path="res://Nodes/Objects/Enemy.tscn" id="2_vo3d3"]
+[ext_resource type="PackedScene" uid="uid://phpqbjgagn5i" path="res://Nodes/Objects/Tower.tscn" id="4_iuh17"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_o3s08"]
 vertices = PackedVector2Array(16, 16, -16, 16, -16, -16, 16, -16)
@@ -169,5 +170,12 @@ position = Vector2(1135, 109)
 [node name="WaveSpawner" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
+
+[node name="Tower" parent="." instance=ExtResource("4_iuh17")]
+position = Vector2(288, 256)
+rotation = 1.5708
+range = 250
+shooting_interval = 1
+projectile_speed = 300
 
 [connection signal="timeout" from="WaveSpawner" to="." method="_on_wave_spawner_timeout"]
