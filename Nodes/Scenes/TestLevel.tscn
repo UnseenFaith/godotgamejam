@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://2c3w74gw5rsu" path="res://Assets/Art/Tilesets/TX Tileset Grass.png" id="1_c0bcn"]
 [ext_resource type="Script" path="res://Scripts/TestLevel.gd" id="1_p2eop"]
 [ext_resource type="PackedScene" uid="uid://b02kru1ialv73" path="res://Nodes/Objects/Enemy.tscn" id="2_vo3d3"]
-[ext_resource type="PackedScene" uid="uid://phpqbjgagn5i" path="res://Nodes/Objects/Tower.tscn" id="4_iuh17"]
+[ext_resource type="PackedScene" uid="uid://drrqafhxpj0p0" path="res://Nodes/Objects/SimpleAoeTower.tscn" id="4_0lmw3"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_o3s08"]
 vertices = PackedVector2Array(16, 16, -16, 16, -16, -16, 16, -16)
@@ -168,21 +168,10 @@ position = Vector2(12, 271)
 position = Vector2(1135, 109)
 
 [node name="WaveSpawner" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 0.5
 autostart = true
 
-[node name="Tower" parent="." instance=ExtResource("4_iuh17")]
-position = Vector2(288, 256)
-rotation = 1.5708
-range = 250
-shooting_interval = 1
-projectile_speed = 300
-
-[node name="Tower2" parent="." instance=ExtResource("4_iuh17")]
-position = Vector2(192, 384)
-rotation = 1.5708
-range = 250
-shooting_interval = 1
-projectile_speed = 250
+[node name="SimpleAoeTower" parent="." instance=ExtResource("4_0lmw3")]
+position = Vector2(208, 304)
 
 [connection signal="timeout" from="WaveSpawner" to="." method="_on_wave_spawner_timeout"]

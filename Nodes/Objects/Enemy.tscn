@@ -1,15 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://b02kru1ialv73"]
+[gd_scene load_steps=5 format=3 uid="uid://b02kru1ialv73"]
 
 [ext_resource type="Script" path="res://Scripts/Enemy.gd" id="1_y4dwh"]
 [ext_resource type="Texture2D" uid="uid://fwrpd0oefqym" path="res://icon.svg" id="2_52qfa"]
+[ext_resource type="PackedScene" uid="uid://dqox0bjqaht20" path="res://Nodes/Objects/HealthComponent.tscn" id="3_ctx3s"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hj2w0"]
 size = Vector2(26, 26)
 
 [node name="Enemy" type="Area2D" groups=["enemy"]]
-collision_mask = 2
+collision_mask = 3
 script = ExtResource("1_y4dwh")
-speed = 75
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.2, 0.2)
@@ -24,4 +24,11 @@ debug_path_custom_color = Color(1, 0.462745, 0.392157, 1)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_hj2w0")
 
+[node name="HealthComponent" parent="." instance=ExtResource("3_ctx3s")]
+
+[node name="SlowTimer" type="Timer" parent="."]
+
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="on_slow" from="." to="." method="_on_slow"]
+[connection signal="health_depleted" from="HealthComponent" to="." method="_on_health_component_health_depleted"]
+[connection signal="timeout" from="SlowTimer" to="." method="_on_slow_timer_timeout"]

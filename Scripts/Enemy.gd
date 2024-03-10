@@ -3,8 +3,12 @@ extends Area2D
 var start_location: Marker2D
 var end_location: Marker2D
 
+signal on_slow(duration: float)
+
 @export var speed: int = 100
-@export var health: int = 3
+@onready var health_component = $HealthComponent
+
+var slowed: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,13 +29,31 @@ func _physics_process(delta: float) -> void:
 		
 	var next_location = $NavigationAgent2D.get_next_path_position()
 	var direction = global_position.direction_to(next_location)
-	velocity = direction * speed
+	if slowed:
+		velocity = (direction * speed) * .25
+	else:
+		velocity = direction * speed
 	position += velocity * delta
 
 
 func _on_area_entered(area):
 	if area.is_in_group("projectile"):
-		health -= area.damage
+		health_component.take_damage(area.damage)
 		area.queue_free()
-		if health == 0:
-			call_deferred("queue_free")
+
+func _on_health_component_health_depleted():
+	if health_component.health <= 0:
+		queue_free()
+
+
+
+func _on_slow(duration):
+	$SlowTimer.wait_time = duration
+	slowed = true
+	$SlowTimer.start()
+
+
+func _on_slow_timer_timeout():
+	$SlowTimer.stop()
+	slowed = false
+

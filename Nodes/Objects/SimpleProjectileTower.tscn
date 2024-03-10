@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://flf6xduc14t8"]
+
+[ext_resource type="Script" path="res://Scripts/SimpleProjectileTower.gd" id="1_276fs"]
+[ext_resource type="PackedScene" uid="uid://d33irw7aohi4h" path="res://Nodes/Objects/TowerComponent.tscn" id="2_6f8sd"]
+[ext_resource type="PackedScene" uid="uid://bqxm8sxfflhio" path="res://Nodes/Objects/Projectile.tscn" id="2_p8l1p"]
+[ext_resource type="Texture2D" uid="uid://bayxeeh3ewc5a" path="res://Assets/Art/Sprites/Tower.png" id="3_bt7kh"]
+
+[node name="SimpleProjectileTower" type="Node2D"]
+script = ExtResource("1_276fs")
+projectile = ExtResource("2_p8l1p")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+rotation = 4.71239
+texture = ExtResource("3_bt7kh")
+
+[node name="ProjectileLocation" type="Marker2D" parent="."]
+position = Vector2(14, 0)
+
+[node name="TowerComponent" parent="." instance=ExtResource("2_6f8sd")]
+collision_layer = 1
+collision_mask = 1
+speed = 0.5
+
+[connection signal="fire" from="TowerComponent" to="." method="_on_tower_component_fire"]

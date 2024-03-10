@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://drrqafhxpj0p0"]
+
+[ext_resource type="Script" path="res://Scripts/SimpleAoeTower.gd" id="1_gvcg3"]
+[ext_resource type="PackedScene" uid="uid://d33irw7aohi4h" path="res://Nodes/Objects/TowerComponent.tscn" id="2_7qsr8"]
+[ext_resource type="Texture2D" uid="uid://c2dxldp8cj6fa" path="res://Assets/Art/Sprites/AoeTower.png" id="2_ifmc0"]
+
+[node name="SimpleAoeTower" type="Node2D"]
+script = ExtResource("1_gvcg3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ifmc0")
+
+[node name="TowerComponent" parent="." instance=ExtResource("2_7qsr8")]
+range = 200
+speed = 2.0
+turret_type = 1
+
+[connection signal="fire" from="TowerComponent" to="." method="_on_tower_component_fire"]
