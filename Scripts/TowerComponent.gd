@@ -18,14 +18,16 @@ enum Turret_Type {
 	AOE
 }
 
-@export var range: int = 100
+var tower_built: bool = false
+
+@export var tower_range: int = 100
 @export var speed: float = 1
 @export var targeting_mode: Targeting_Mode = Targeting_Mode.FIRST
 @export var turret_type: Turret_Type
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$TowerRange.shape.radius = range
+	$TowerRange.shape.radius = tower_range
 	$ActivationTimer.wait_time = speed
 	
 func _on_area_entered(area: Area2D) -> void:
@@ -37,4 +39,5 @@ func _on_area_exited(area: Area2D) -> void:
 		enemies.erase(area)
 
 func _on_activation_timer_timeout():
-	emit_signal("fire")
+	if tower_built == true:
+		emit_signal("fire")

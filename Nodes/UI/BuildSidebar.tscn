@@ -1,0 +1,108 @@
+[gd_scene load_steps=4 format=3 uid="uid://3447vwwnwwnc"]
+
+[ext_resource type="Script" path="res://Scripts/UI/BuildSidebar.gd" id="1_oyiox"]
+[ext_resource type="Texture2D" uid="uid://bayxeeh3ewc5a" path="res://Assets/Art/Sprites/Tower.png" id="1_pj4pf"]
+[ext_resource type="Script" path="res://addons/simple-gui-transitions/transition.gd" id="2_mjdmh"]
+
+[node name="Shop" type="Control"]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -136.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 8
+mouse_filter = 1
+script = ExtResource("1_oyiox")
+
+[node name="ShopOpened" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="GuiTransition" type="Node" parent="ShopOpened"]
+script = ExtResource("2_mjdmh")
+auto_start = 0
+animation_enter = 3
+animation_leave = 3
+duration = 0.27
+delay = 0.0
+layout = NodePath("..")
+layout_id = "ShopOpened"
+controls = Array[NodePath]([NodePath("../ColorRect"), NodePath("../BasicTower"), NodePath("../Button")])
+
+[node name="ColorRect" type="ColorRect" parent="ShopOpened"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.239216, 0.239216, 0.239216, 1)
+
+[node name="BasicTower" type="Button" parent="ShopOpened"]
+texture_filter = 1
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 64.0
+text = "Basic"
+icon = ExtResource("1_pj4pf")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="Button" type="Button" parent="ShopOpened"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -64.0
+offset_top = -30.0
+offset_right = 64.0
+offset_bottom = 1.0
+grow_horizontal = 2
+text = "Close"
+
+[node name="ShopClosed" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GuiTransition" type="Node" parent="ShopClosed"]
+script = ExtResource("2_mjdmh")
+auto_start = 0
+animation_enter = 3
+animation_leave = 3
+duration = 0.2
+layout = NodePath("..")
+controls = Array[NodePath]([NodePath("../Button")])
+
+[node name="Button" type="Button" parent="ShopClosed"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -31.0
+offset_right = 64.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Open"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ShopOpened/BasicTower" to="." method="_on_basic_tower_pressed"]
+[connection signal="pressed" from="ShopOpened/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="ShopClosed/Button" to="." method="_on_open_button_pressed"]

@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var tower = $TowerComponent
-
 @export var projectile: PackedScene
 @export var projectile_speed: int = 200
 
