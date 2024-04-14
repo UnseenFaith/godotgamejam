@@ -15,8 +15,9 @@ func has_bubble() -> bool:
 func add_bubble():
 	if has_bubble():
 		return
-	_want_bubble = WantBubbleFactory.new_sword('test-sword-1')
 	
+	_want_bubble = WantBubbleFactory.new_item(null)
+	_want_bubble.id = 'whee'
 	var tgt_rect = $TestPc/Sprite2D.get_rect()
 	_want_bubble.position.y -= ((tgt_rect.size.y / 2) + 10)
 	_want_bubble.timeout.connect(_bubble_timeout)
@@ -47,4 +48,7 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed('ui_cancel'):
 		fill_bubble()
+
+	if Input.is_action_just_pressed('ui_focus_next'):
+		get_tree().quit()
 

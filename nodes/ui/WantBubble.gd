@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name WantBubble
+
 # fires if the want is not completed in time: (id: String)
 signal timeout
 
