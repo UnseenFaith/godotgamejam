@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1p3hl55up3u8"]
+
+[ext_resource type="Texture2D" uid="uid://12tcnoh4t2rt" path="res://art/main_menu.jpg" id="1_8u8lk"]
+[ext_resource type="Script" path="res://nodes/ui/menu_system.gd" id="1_bpgo5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cg7qw"]
+size = Vector2(367, 139)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5tsdj"]
+size = Vector2(258, 85)
+
+[node name="MenuSystem" type="Node2D"]
+script = ExtResource("1_bpgo5")
+
+[node name="MainMenu" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+scale = Vector2(4, 4)
+texture = ExtResource("1_8u8lk")
+
+[node name="StartArea" type="Area2D" parent="."]
+position = Vector2(458, 262)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StartArea"]
+position = Vector2(173.5, 79.5)
+shape = SubResource("RectangleShape2D_cg7qw")
+
+[node name="QuitArea" type="Area2D" parent="."]
+position = Vector2(502, 558)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="QuitArea"]
+position = Vector2(129, 39.5)
+shape = SubResource("RectangleShape2D_5tsdj")
+
+[connection signal="input_event" from="StartArea" to="." method="_start_input"]
+[connection signal="mouse_entered" from="StartArea" to="." method="_start_over"]
+[connection signal="mouse_exited" from="StartArea" to="." method="_start_exit"]
+[connection signal="input_event" from="QuitArea" to="." method="_quit_event"]
