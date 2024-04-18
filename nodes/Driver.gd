@@ -9,10 +9,9 @@ func _ready():
 	add_child(Jukebox.get_player())
 	menu_system = preload('res://nodes/ui/menu_system.tscn').instantiate()
 	add_child(menu_system)
-	
+
 	menu_system.start_game.connect(_game_start)
 	menu_system.quit_game.connect(_game_exit)
-	# print(get_tree_string_pretty())
 
 func _game_exit():
 	get_tree().quit()
@@ -42,7 +41,7 @@ func _fade_out_completed():
 	add_child(active_level)
 	menu_system.visible = false
 	menu_system.modulate = Color.WHITE
-	
+
 	cur_tweener = get_tree().create_tween()
 	cur_tweener.tween_property($Curtain, 'modulate', _color_fade_in, 1.5)
 	cur_tweener.tween_property($Curtain, 'modulate', _color_fade_in, 1)

@@ -9,6 +9,7 @@ script = ExtResource("1_foom5")
 bubble_spacing = 3
 
 [node name="Button" type="Button" parent="."]
+visible = false
 offset_left = 188.0
 offset_top = -6.0
 offset_right = 296.0
@@ -17,6 +18,7 @@ text = "Add Random"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button2" type="Button" parent="."]
+visible = false
 offset_left = 222.0
 offset_top = 39.0
 offset_right = 271.0
