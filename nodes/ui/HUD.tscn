@@ -50,7 +50,6 @@ icon_alignment = 1
 position = Vector2(1182, 148)
 
 [node name="Button" type="Button" parent="."]
-visible = false
 offset_left = 1035.0
 offset_top = 209.0
 offset_right = 1077.0
@@ -58,7 +57,6 @@ offset_bottom = 259.0
 text = "1"
 
 [node name="Button2" type="Button" parent="."]
-visible = false
 offset_left = 1036.0
 offset_top = 329.0
 offset_right = 1078.0
@@ -66,7 +64,6 @@ offset_bottom = 376.0
 text = "2"
 
 [node name="Button3" type="Button" parent="."]
-visible = false
 offset_left = 1040.0
 offset_top = 446.0
 offset_right = 1075.0
