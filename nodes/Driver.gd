@@ -52,10 +52,14 @@ func _curtain_out(next):
 	if next != null:
 		cur_tweener.tween_callback(next)
 
+# handles button presses so we can filter out spamming the start button
 func _game_start():
 	if not _can_start:
 		return
 	_can_start = false
+	_game_start_direct()
+
+func _game_start_direct():
 	_curtain_in(_load_level)
 	cur_level += 1
 
@@ -126,7 +130,7 @@ func _summary_progress(typ: Enums.ProgressType):
 			_summary_menu()
 			return
 
-	_game_start()
+	_game_start_direct()
 
 func _summary_menu():
 	_curtain_in(_load_menu)
