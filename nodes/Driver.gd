@@ -4,6 +4,10 @@ var menu_system
 var cur_tweener
 var active_level
 
+# controls whether we can hit start -- needed to prevent folks\
+# spamming start and jumping levels
+var _can_start = true
+
 @export var levels = [
 	preload('res://nodes/scenes/Main1.tscn'),
 	preload('res://nodes/scenes/Main2.tscn'),
@@ -48,8 +52,10 @@ func _curtain_out(next):
 	if next != null:
 		cur_tweener.tween_callback(next)
 
-
 func _game_start():
+	if not _can_start:
+		return
+	_can_start = false
 	_curtain_in(_load_level)
 	cur_level += 1
 
@@ -63,7 +69,6 @@ func _load_level():
 	cur_tweener = null
 
 	active_level = levels[cur_level].instantiate()
-	#active_level.modulate = Color.BLACK
 	add_child(active_level)
 	menu_system.visible = false
 	menu_system.modulate = Color.WHITE
@@ -79,6 +84,7 @@ func _load_menu():
 	
 	menu_system.visible = true
 	menu_system.modulate = Color.WHITE
+	_can_start = true
 	_curtain_out(null)
 	Jukebox.play_title()
 
