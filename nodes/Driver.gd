@@ -14,8 +14,6 @@ var _can_start = true
 	preload('res://nodes/scenes/Main3.tscn'),
 ]
 
-@export var start_level = 0
-
 var cur_level = -1
 
 # Called when the node enters the scene tree for the first time.
@@ -26,12 +24,14 @@ func _ready():
 
 	menu_system.start_game.connect(_game_start)
 	menu_system.quit_game.connect(_game_exit)
+	menu_system.show_credits.connect(_game_credits)
 
 func _game_exit():
 	get_tree().quit()
 
 @onready var _curtain = $CanvasLayer/Curtain
 @onready var _level_summary = $CanvasLayer/LevelSummary
+var _credits
 
 # next: ?Callable
 func _curtain_in(next):
@@ -53,6 +53,9 @@ func _curtain_out(next):
 		cur_tweener.tween_callback(next)
 
 var max_level = 0
+
+func _game_credits():
+	_curtain_in(_load_credits)
 
 # handles button presses so we can filter out spamming the start button
 func _game_start():
@@ -82,8 +85,22 @@ func _load_level():
 	_curtain_out(_level_fade_in_completed)
 	Jukebox.play_bg()
 
+func _load_credits():
+	if active_level != null:
+		remove_child(active_level)
+
+	if _credits != null:
+		$CanvasLayer.remove_child(_credits)
+	
+	_credits = preload('res://nodes/ui/Credits.tscn').instantiate()
+	_credits.z_index = 4000
+	_credits.visible = true
+	$CanvasLayer.add_child(_credits)
+	_curtain_out(null)
+
 func _load_menu():
 	_level_summary.visible = false
+	_credits.visible = false
 	if active_level != null:
 		remove_child(active_level)
 	
@@ -138,4 +155,7 @@ func _summary_progress(typ: Enums.ProgressType):
 	_curtain_in(_load_level)
 
 func _summary_menu():
+	_curtain_in(_load_menu)	
+
+func _exit_credits():
 	_curtain_in(_load_menu)
