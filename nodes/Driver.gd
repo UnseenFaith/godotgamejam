@@ -96,6 +96,7 @@ func _load_credits():
 	_credits.z_index = 4000
 	_credits.visible = true
 	$CanvasLayer.add_child(_credits)
+	_credits.end_credits.connect(_exit_credits)
 	_curtain_out(null)
 
 func _load_menu():
