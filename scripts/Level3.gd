@@ -11,6 +11,10 @@ var furnace_timer_offsets: PackedVector2Array = PackedVector2Array([Vector2(10, 
 var table_timer_offsets: PackedVector2Array = PackedVector2Array([Vector2(15, 30), Vector2(-10, 30)])
 var tub_timer_offsets: PackedVector2Array = PackedVector2Array([Vector2(-15, 40), Vector2(15, 20)])
 
+
+var tub_tiles = [Vector2i(31, 1), Vector2i(31, -2)]
+var anvil_tile = Vector2i(26, -8)
+
 var groupNames = ["bronze_ore", "gold_ore", "diamond_ore", "leather_hide", "wood"]
 var crates = []
 var furnaces = []
@@ -45,6 +49,7 @@ func _ready():
 		anvil_toast.position = $Anvils.get_node("Anvil" + str(i)).get_node("ToastPosition").position
 	
 		anvils.append({
+			"actual_tile": anvil_tile,
 			"id": i,
 			"tile": anvil_collision_tiles[i],
 			"recipe": null,
@@ -159,6 +164,7 @@ func _ready():
 		tub_toast.position = tub.get_node("ToastPosition").position
 	
 		tubs.append({
+			"actual_tile": tub_tiles[i],
 			"id": i,
 			"tile": tub_collision_tiles[i],
 			"recipe": null,

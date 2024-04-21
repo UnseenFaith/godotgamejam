@@ -1,6 +1,6 @@
 extends TileMap
 
-var crate_collision_tiles: PackedVector2Array = PackedVector2Array([Vector2(35, 0), Vector2(35, -3), Vector2(29, 3), Vector2(27, 3)])
+var crate_collision_tiles: PackedVector2Array = PackedVector2Array([Vector2(35, 0), Vector2(35, -3), Vector2(29, 3), Vector2(26, 3)])
 var anvil_collision_tile: Vector2 = Vector2(25, -3)
 var furnace_collision_tiles: PackedVector2Array = PackedVector2Array([Vector2(30, -5), Vector2(26, -5)])
 var trash_collision_tile: Vector2 = Vector2(25, 1)
@@ -9,6 +9,10 @@ var tub_collision_tiles: PackedVector2Array = PackedVector2Array([Vector2(31, 3)
 
 var tub_timer_offsets: PackedVector2Array = PackedVector2Array([Vector2(19, 30), Vector2(-10, 40)])
 var tub_item_offsets: PackedVector2Array = PackedVector2Array([Vector2(-7, -10), Vector2(25, -26)])
+
+# RAYCAST STUFF
+var tub_tiles = [Vector2i(30, 3), Vector2i(33, -7)]
+var anvil_tile = Vector2i(22, -4)
 
 var groupNames = ["bronze_ore", "gold_ore", "diamond_ore", "leather_hide"]
 var crates = []
@@ -45,6 +49,7 @@ func _ready():
 	anvil_toast.position = map_to_local(anvil_collision_tile) + Vector2(-23, -32)
 	
 	anvils.append({
+		"actual_tile": Vector2i(22, -4),
 		"id": 0,
 		"tile": anvil_collision_tile,
 		"recipe": null,
@@ -143,6 +148,7 @@ func _ready():
 		tub_toast.position = map_to_local(tub_collision_tiles[i]) + tub_item_offsets[i]
 	
 		tubs.append({
+			"actual_tile": tub_tiles[i],
 			"id": i,
 			"tile": tub_collision_tiles[i],
 			"recipe": null,

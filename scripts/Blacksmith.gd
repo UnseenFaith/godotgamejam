@@ -5,7 +5,7 @@ extends CharacterBody2D
 @onready var tilemap: TileMap = get_parent()
 @export var speed: int = 175
 
-var immobile = false
+var immobile = true
 
 var polishing_time = 3
 var anvil_time = 3
@@ -214,14 +214,15 @@ func handle_interaction_input() -> void:
 				var furnace = tilemap.furnaces.filter(func (f): return f.area == interactable).front()
 				# Our item finished smelting and we need to collect it
 				if heldItem == null:
-					if furnace.inventory.size() == 1 && furnace.smelting && furnace.inventory[0] == furnace.recipe:
-						furnace.smelting = false
-						clear_interactable(furnace)
-						return
-					else:
-						$WompWomp.play()
-						return
-					if furnace.inventory.size() > 0 && !furnace.smelting:
+					if furnace.smelting:
+						if furnace.inventory.size() ==  1 && furnace.inventory[0] == furnace.recipe:
+							furnace.smelting = false
+							clear_interactable(furnace)
+							return
+						else:
+							$WompWomp.play()
+							return
+					elif furnace.inventory.size() > 0:
 						var itemToRemove = furnace.inventory[0]
 						furnace.toast.clear()
 						furnace.inventory = furnace.inventory.slice(1)
@@ -266,20 +267,23 @@ func handle_interaction_input() -> void:
 				var table = tilemap.tables.filter(func (t): return t.area == interactable).front()
 				if heldItem == null:
 					if table.crafting:
-						if table.inventory.size() == 1:
+						if table.inventory.size() == 1 && table.recipe == table.inventory[0]:
 							table.crafting = false
 							clear_interactable(table)
 							return
 						else:
 							$WompWomp.play()
 							return
-					else:
+					elif table.inventory.size() == 1:
 						var itemToRemove = table.inventory[0]
 						table.toast.clear()
 						table.inventory = table.inventory.slice(1)
 						for item in table.inventory:
 							table.toast.add_material(item)
 						spawn_in_held_item(itemToRemove)
+						return
+					else:
+						$WompWomp.play()
 						return
 				
 				
@@ -550,15 +554,26 @@ func _physics_process(_delta) -> void:
 	if $RayCast2D.is_colliding():
 		var rid = $RayCast2D.get_collider_rid()
 		var tile = tilemap.get_coords_for_body_rid(rid)
+		print(tile)
 		var data = tilemap.get_cell_tile_data(1, tile)
 		if data:
 			var resource = data.get_custom_data("interactable")
-			var interact = tilemap.crates.filter(func (f): return f.id == resource).front()
-			if interact:
-				interactable = interact.area
+			match resource:
+				"wood","leather_hide","gold_ore","bronze_ore","diamond_ore":
+					var interact = tilemap.crates.filter(func (f): return f.id == resource).front()
+					if interact:
+						interactable = interact.area
+				"tub":
+					var interact = tilemap.tubs.filter(func (f): return f.actual_tile == tile).front()
+					if interact:
+						interactable = interact.area
+				"anvil":
+					var interact = tilemap.anvils.filter(func (f): return f.actual_tile == tile).front()
+					if interact:
+						interactable = interact.area
 	else:
 		if interactable && !interactable.get_overlapping_bodies().filter(func (b): return b == self):
-			if crates.has(interactable.get_groups()[0]):
+			if crates.has(interactable.get_groups()[0]) || interactable.get_groups()[0] == "tub" || interactable.get_groups()[0] == 'anvil':
 				interactable = null
 
 	
