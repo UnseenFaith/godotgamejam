@@ -1,10 +1,10 @@
 [gd_scene load_steps=8 format=3 uid="uid://mxsv78s4n8l5"]
 
 [ext_resource type="Script" path="res://nodes/ui/TutorialCard.gd" id="1_kmt1j"]
-[ext_resource type="Texture2D" uid="uid://c13gc6nid0cdp" path="res://art/tutorial-card/tutorial_card_base.png" id="2_wrlcw"]
-[ext_resource type="Texture2D" uid="uid://csj47fk8x4mql" path="res://art/tutorial-card/shield-text.png" id="3_ypemw"]
-[ext_resource type="Texture2D" uid="uid://c3fi60dbpkr2m" path="res://art/tutorial-card/sword-text.png" id="4_mg6h8"]
-[ext_resource type="Texture2D" uid="uid://d4uucflrltmi" path="res://art/tutorial-card/staff-text.png" id="5_x6otf"]
+[ext_resource type="Texture2D" uid="uid://cum7o17rjmoa7" path="res://art/tutorial-card/tutorial_card_base_2.png" id="2_i5sl6"]
+[ext_resource type="Texture2D" uid="uid://duo0dv6iveak" path="res://art/tutorial-card/shield_img.png" id="3_t5p5l"]
+[ext_resource type="Texture2D" uid="uid://cqet7lhqk8xnr" path="res://art/tutorial-card/sword_img.png" id="4_2i1j7"]
+[ext_resource type="Texture2D" uid="uid://cyrr7ejl2fm2p" path="res://art/tutorial-card/staff_img.png" id="5_6hxnv"]
 [ext_resource type="FontFile" uid="uid://dr7uv14p8if1m" path="res://art/Stacked_Pixel.ttf" id="6_wjwgq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lwhod"]
@@ -15,21 +15,25 @@ script = ExtResource("1_kmt1j")
 
 [node name="Background" type="Sprite2D" parent="."]
 position = Vector2(522, 265)
-texture = ExtResource("2_wrlcw")
+texture = ExtResource("2_i5sl6")
 
 [node name="Shield" type="Sprite2D" parent="Background"]
 visible = false
-texture = ExtResource("3_ypemw")
+position = Vector2(1.14441e-05, -3.00002)
+scale = Vector2(0.975, 0.975)
+texture = ExtResource("3_t5p5l")
 
 [node name="Sword" type="Sprite2D" parent="Background"]
 visible = false
-position = Vector2(13, -24)
-texture = ExtResource("4_mg6h8")
+position = Vector2(1.33328, -9)
+scale = Vector2(0.958333, 0.958333)
+texture = ExtResource("4_2i1j7")
 
 [node name="Staff" type="Sprite2D" parent="Background"]
 visible = false
-position = Vector2(-24, -75)
-texture = ExtResource("5_x6otf")
+position = Vector2(-3.55557, -5)
+scale = Vector2(0.969444, 0.969444)
+texture = ExtResource("5_6hxnv")
 
 [node name="Start" type="Label" parent="."]
 offset_left = 890.0
