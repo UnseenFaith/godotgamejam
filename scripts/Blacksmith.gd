@@ -5,7 +5,7 @@ extends CharacterBody2D
 @onready var tilemap: TileMap = get_parent()
 @export var speed: int = 175
 
-var immobile = true
+var immobile = false
 
 var polishing_time = 3
 var anvil_time = 3
@@ -118,6 +118,7 @@ var smithingTimerScene: PackedScene = preload("res://nodes/scenes/cowndown_timer
 var smithingTimer: Node2D
 
 var directions: PackedStringArray = PackedStringArray(["east", "south_east", "south", "south_west", "west", "north_west", "north", "north_east"])
+var angles = [-90, -45, 0, 45, 90, 135, 180, -135]
 var last_direction: String = "south"
 var last_direction_vector: Vector2 = Vector2(0, 1)
 
@@ -130,31 +131,39 @@ func basic_movement():
 		if $Footsteps.playing == false:
 			$Footsteps.playing = true
 		$AnimatedSprite2D.animation = directions[index]
+		$RayCast2D.rotation_degrees = angles[index]
 		last_direction = directions[index]
 		last_direction_vector = input_direction
 	else:
 		$Footsteps.playing = false
 		$AnimatedSprite2D.animation = "idle_" + last_direction
-		
+		var degrees = angles[directions.find(last_direction)]
+		$RayCast2D.rotation_degrees = degrees
+	
+
 	$AnimatedSprite2D.play()
 	velocity = input_direction * speed
 	move_and_slide()
 	
-	
 func show_interact_button():
 	if interactable:
+		var isFurnace = tilemap.furnaces.filter(func (f): return f.area == interactable).size() > 0
+		if isFurnace:
+			$InteractPrompt2.visible = true
 		$InteractPrompt.visible = true
 		if !heldItem:
+			$InteractPrompt2.position = position + Vector2(0, 20)
 			$InteractPrompt.position = position + Vector2(0, 20)
 		else:
+			$InteractPrompt2.position = position + Vector2(0, 5)
 			$InteractPrompt.position = position + Vector2(0, 5)
 	else:
+		$InteractPrompt2.visible = false
 		$InteractPrompt.visible = false
 
 func handle_interaction_input() -> void:
 	if interactable:
 		var group = interactable.get_groups()[0]
-		print(group)
 		match group:
 			"diamond_ore","gold_ore","bronze_ore","leather_hide", "wood":
 				if heldItem == null:
@@ -163,7 +172,7 @@ func handle_interaction_input() -> void:
 			"anvil":
 				var anvil = tilemap.anvils.filter(func (a): return a.area == interactable).front()
 
-				if  heldItem == null && anvil.inventory.size() == 1 && anvil.smithing:
+				if  heldItem == null && anvil.inventory.size() == 1 && anvil.smithing && anvil.inventory[0] == anvil.recipe:
 					anvil.smithing = false
 					clear_interactable(anvil)
 					return
@@ -172,13 +181,14 @@ func handle_interaction_input() -> void:
 					var item = heldItem.get_groups()[0]
 					
 					if !anvil_allowed_items.has(item):
+						$WompWomp.play()
 						return
 
 					anvil.inventory.append(str(item))
 					remove_held_item()
 					anvil.recipe = "_".join(item.split("_").slice(0, 2))
 					
-					if anvil.recipes.has(anvil.recipe):
+					if !anvil.smithing && anvil.recipes.has(anvil.recipe):
 						immobile = true
 						anvil.smithing = true
 						anvil.timer = create_timer()
@@ -198,15 +208,33 @@ func handle_interaction_input() -> void:
 						anvil.timer.queue_free()
 						anvil.timer = null
 						spawn_finished_item(anvil.recipe, anvil)
+				else:
+					$WompWomp.play()
 			"furnace":
 				var furnace = tilemap.furnaces.filter(func (f): return f.area == interactable).front()
 				# Our item finished smelting and we need to collect it
-				if heldItem == null && furnace.inventory.size() == 1 && furnace.smelting && furnace.inventory[0] == furnace.recipe:
-					furnace.smelting = false
-					clear_interactable(furnace)
-					return
-				
+				if heldItem == null:
+					if furnace.inventory.size() == 1 && furnace.smelting && furnace.inventory[0] == furnace.recipe:
+						furnace.smelting = false
+						clear_interactable(furnace)
+						return
+					else:
+						$WompWomp.play()
+						return
+					if furnace.inventory.size() > 0 && !furnace.smelting:
+						var itemToRemove = furnace.inventory[0]
+						furnace.toast.clear()
+						furnace.inventory = furnace.inventory.slice(1)
+						for item in furnace.inventory:
+							furnace.toast.add_material(item)
+						spawn_in_held_item(itemToRemove)
+						return
+					else:
+						$WompWomp.play()
+						return
+							
 				if furnace.inventory.size() > 2:
+					$WompWomp.play()
 					return
 
 				# If we are holding an item
@@ -214,10 +242,11 @@ func handle_interaction_input() -> void:
 					var resource = heldItem.get_groups()[0]
 					
 					if !furnace_allowed_items.has(resource):
+						$WompWomp.play()
 						return
 					
 					if !furnace.inventory.all(func(r): return r == resource):
-						print("Not Everything inside was same, disgard interact action")
+						$WompWomp.play()
 						return
 
 					furnace.inventory.append(str(resource))
@@ -231,48 +260,67 @@ func handle_interaction_input() -> void:
 							furnace.recipe = resource.split("_")[0] + "_blade_chunk"
 						3:
 							furnace.recipe = resource.split("_")[0] + "_shield_chunk"
+				else:
+					$WompWomp.play()
 			"craft":
 				var table = tilemap.tables.filter(func (t): return t.area == interactable).front()
-				if heldItem == null && table.inventory.size() == 1 && table.crafting:
-					table.crafting = false
-					clear_interactable(table)
-					return
+				if heldItem == null:
+					if table.crafting:
+						if table.inventory.size() == 1:
+							table.crafting = false
+							clear_interactable(table)
+							return
+						else:
+							$WompWomp.play()
+							return
+					else:
+						var itemToRemove = table.inventory[0]
+						table.toast.clear()
+						table.inventory = table.inventory.slice(1)
+						for item in table.inventory:
+							table.toast.add_material(item)
+						spawn_in_held_item(itemToRemove)
+						return
+				
 				
 				if table.inventory.size() > 1:
+					$WompWomp.play()
 					return
 					
 				if heldItem != null && !table.crafting:
 					var resource = heldItem.get_groups()[0]
 					
 					if !table_allowed_items.has(resource):
+						$WompWomp.play()
 						return
 					
 					if table.inventory.any(func(r): return r == resource):
-						print("You already put one of those in there!")
+						$WompWomp.play()
 						return
 					
 					# dirty hack to prevent putting in leather with staff or wood with sword
 					# too lazy to do this any other way
 					if table.inventory.size() > 0:
-						print(table.inventory[0])
-						print(resource)
 						match resource:
 							"leather_hide":
 								if !table.inventory[0].ends_with("blade"):
+									$WompWomp.play()
 									return
 							"wood":
 								if !table.inventory[0].ends_with("gem"):
+									$WompWomp.play()
 									return
 							"bronze_gem","gold_gem","diamond_gem":
 								if table.inventory[0] == "leather_hide":
+									$WompWomp.play()
 									return
 							"bronze_blade","gold_blade","diamond_blade":
 								if table.inventory[0] == "wood":
+									$WompWomp.play()
 									return
-					
-					
+
 					remove_held_item()
-					
+
 					if resource == "leather_hide":
 						if table.recipe:
 							table.recipe = table.recipe + "_sword"
@@ -311,6 +359,8 @@ func handle_interaction_input() -> void:
 						table.timer.queue_free()
 						table.timer = null
 						spawn_finished_item(table.recipe, table)
+				else:
+					$WompWomp.play()
 			"tub":
 				var tub = tilemap.tubs.filter(func (t): return t.area == interactable).front()
 				
@@ -320,12 +370,14 @@ func handle_interaction_input() -> void:
 					return
 				
 				if tub.inventory.size() > 0:
+					$WompWomp.play()
 					return
-					
+
 				if heldItem != null && !tub.polishing:
 					var resource = heldItem.get_groups()[0]
 					
 					if !tub_allowed_items.has(resource):
+						$WompWomp.play()
 						return
 
 					remove_held_item()
@@ -340,23 +392,32 @@ func handle_interaction_input() -> void:
 						tub.timer.position = get_location_from_group(group, tub.tile) - tub.timer_position
 						tub.timer.start()
 						$Polishing.playing = true
+						tilemap.get_node("Tubs").get_node("Tub" + str(tub.id)).get_node("TubAnimation").frame = 0
+						tilemap.get_node("Tubs").get_node("Tub" + str(tub.id)).get_node("TubAnimation").visible = true
 						await tub.timer.timeout
+						tilemap.get_node("Tubs").get_node("Tub" + str(tub.id)).get_node("TubAnimation").frame = 0
+						tilemap.get_node("Tubs").get_node("Tub" + str(tub.id)).get_node("TubAnimation").visible = false
 						$Polishing.playing = false
 						spawn_finished_item(tub.recipe, tub)
 						tub.inventory = [tub.recipe]
 						tub.timer.queue_free()
 						tub.timer = null
+				else:
+					$WompWomp.play()
 			"trash":
 				if heldItem != null:
 					$TrashCan.playing = true
 					remove_held_item()
+				else:
+					$WompWomp.play()
 			"delivery":
 				if heldItem != null:
 					var queue = get_tree().current_scene.active_level.get_node("Hud").get_node("OrderQueue")
 					var item = heldItem.get_groups()[0]
 					if item.begins_with("polished") && queue.fill("_".join(item.split("_").slice(1))):
 						remove_held_item()
-						# PLAY DING SOUND OR COMPLETED ORDER SOUND
+					else:
+						$WompWomp.play()
 					
 func handle_start_interaction_input():
 	if interactable:
@@ -366,8 +427,8 @@ func handle_start_interaction_input():
 				var furnace = tilemap.furnaces.filter(func (f): return f.area == interactable).front()
 				if furnace.recipes.has(furnace.recipe) && !furnace.smelting:
 					$LightFurnace.play()
+					tilemap.get_node("Furnaces").get_node("Furnace" + str(furnace.id)).get_node("FurnaceAnimation").frame = 0
 					tilemap.get_node("Furnaces").get_node("Furnace" + str(furnace.id)).get_node("FurnaceAnimation").visible = true
-					print("Starting smelting for " + furnace.recipe)
 					furnace.toast.clear()
 					furnace.smelting = true
 					furnace.timer = create_timer()
@@ -377,6 +438,8 @@ func handle_start_interaction_input():
 					furnace.timer.start()
 					$HeatFurnace.playing = true
 					furnace.timer.position = get_location_from_group(group, furnace.tile) - furnace.timer_position
+				else:
+					$WompWomp.play()
 					
 
 
@@ -478,10 +541,31 @@ func start_level():
 func end_level():
 	set_immobile(true)
 
+var crates = ["wood", "leather_hide", "gold_ore", "bronze_ore", "diamond_ore"]
 func _physics_process(_delta) -> void:
+	
+	# Raycast detect Phyiscs Layer 2 for Resource Crates
+	# Will allow them to pickup crates from any direction instead of
+	# only in front of them
+	if $RayCast2D.is_colliding():
+		var rid = $RayCast2D.get_collider_rid()
+		var tile = tilemap.get_coords_for_body_rid(rid)
+		var data = tilemap.get_cell_tile_data(1, tile)
+		if data:
+			var resource = data.get_custom_data("interactable")
+			var interact = tilemap.crates.filter(func (f): return f.id == resource).front()
+			if interact:
+				interactable = interact.area
+	else:
+		if interactable && !interactable.get_overlapping_bodies().filter(func (b): return b == self):
+			if crates.has(interactable.get_groups()[0]):
+				interactable = null
+
+	
 	if !immobile:
 		basic_movement()
 		show_interact_button()
+
 	
 func set_immobile(true_or_false):
 	immobile = true_or_false
