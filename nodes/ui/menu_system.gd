@@ -90,3 +90,16 @@ func _exit_credits():
 func _action_credits(viewport, event, shape_idx):
 	if InputUtil.is_click(event):
 		show_credits.emit()
+
+func _settings_enter():
+	_over_button($MainMenuBG/SettingsButton)
+
+func _settings_exit():
+	_exit_button($MainMenuBG/SettingsButton)
+
+func _settings_event(viewport, event, shape_idx):
+	if InputUtil.is_click(event):
+		_load_settings()
+
+func _load_settings():
+	pass
