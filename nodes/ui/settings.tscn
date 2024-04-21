@@ -229,4 +229,4 @@ region_rect = Rect2(507, 564, 265, 89)
 position = Vector2(2, 1)
 shape = SubResource("RectangleShape2D_4g8nx")
 
-[connection signal="input_event" from="SettingsItems/BackButton/Area2D" to="." method="_back_eventc"]
+[connection signal="input_event" from="SettingsItems/BackButton/Area2D" to="." method="_back_event"]
