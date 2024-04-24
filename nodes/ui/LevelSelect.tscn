@@ -1,0 +1,75 @@
+[gd_scene load_steps=10 format=3 uid="uid://bfttfa20wuefh"]
+
+[ext_resource type="Texture2D" uid="uid://wxorn3874kvk" path="res://art/main-menu/buttons.png" id="1_5dhxx"]
+[ext_resource type="Texture2D" uid="uid://dejaafy4w1ffj" path="res://art/main-menu/font.png" id="2_36bf7"]
+[ext_resource type="Texture2D" uid="uid://dpgtmjj15ln7j" path="res://art/main-menu/buttons-drop-shadow.png" id="3_7x5hw"]
+[ext_resource type="Texture2D" uid="uid://lk1vfubqodr1" path="res://art/tutorial-card/next_page_button.png" id="4_t0jxr"]
+[ext_resource type="Texture2D" uid="uid://p7a4vnoinc6x" path="res://art/tutorial-card/left_arrow.png" id="5_ejr80"]
+[ext_resource type="Texture2D" uid="uid://qk2ygbxivlv2" path="res://art/tutorial-card/prev_button.png" id="6_dgtb2"]
+[ext_resource type="Texture2D" uid="uid://c2lwkqiw6ttki" path="res://art/tutorial-card/right_arrow.png" id="7_anbud"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u7mj7"]
+size = Vector2(129, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ycq77"]
+size = Vector2(132, 67)
+
+[node name="LevelSelect" type="Node2D"]
+
+[node name="Settings" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(622, 100)
+texture = ExtResource("1_5dhxx")
+region_enabled = true
+region_rect = Rect2(671.172, 416.332, 473.49, 131.624)
+
+[node name="Text" type="Sprite2D" parent="Settings"]
+position = Vector2(3.04292, 2.25)
+scale = Vector2(0.914141, 0.914141)
+texture = ExtResource("2_36bf7")
+region_enabled = true
+region_rect = Rect2(153, 433, 487, 102)
+
+[node name="DropShadow" type="Sprite2D" parent="Settings"]
+z_index = -1
+position = Vector2(16, 13)
+texture = ExtResource("3_7x5hw")
+region_enabled = true
+region_rect = Rect2(678.067, 428.813, 479.472, 135.51)
+
+[node name="Pagers" type="Node2D" parent="."]
+position = Vector2(618, 377)
+
+[node name="Left" type="Sprite2D" parent="Pagers"]
+position = Vector2(-534, 0)
+texture = ExtResource("4_t0jxr")
+
+[node name="Arrow" type="Sprite2D" parent="Pagers/Left"]
+texture = ExtResource("5_ejr80")
+
+[node name="Area2D" type="Area2D" parent="Pagers/Left"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pagers/Left/Area2D"]
+position = Vector2(-1.5, 3)
+shape = SubResource("RectangleShape2D_u7mj7")
+
+[node name="Right" type="Sprite2D" parent="Pagers"]
+position = Vector2(576, 4)
+texture = ExtResource("6_dgtb2")
+
+[node name="Arrow" type="Sprite2D" parent="Pagers/Right"]
+texture = ExtResource("7_anbud")
+
+[node name="Area2D" type="Area2D" parent="Pagers/Right"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pagers/Right/Area2D"]
+position = Vector2(-2, -0.5)
+shape = SubResource("RectangleShape2D_ycq77")
+
+[node name="Level" type="Node2D" parent="."]
+
+[node name="Level1" type="Sprite2D" parent="Level"]
+
+[node name="Level2" type="Sprite2D" parent="Level"]
+
+[node name="Level3" type="Sprite2D" parent="Level"]
