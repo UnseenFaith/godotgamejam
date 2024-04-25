@@ -548,9 +548,9 @@ lifetime = 6.0
 
 [node name="Art" type="Label" parent="Container"]
 visible = false
-offset_left = 610.0
+offset_left = 637.0
 offset_top = -1301.0
-offset_right = 889.0
+offset_right = 916.0
 offset_bottom = -1262.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
@@ -634,7 +634,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("6_5aijh")
 theme_override_font_sizes/font_size = 36
-text = "Junpei"
+text = "Sound"
 horizontal_alignment = 1
 
 [node name="Name" type="Label" parent="Container/Sound"]
@@ -646,7 +646,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("6_5aijh")
 theme_override_font_sizes/font_size = 82
-text = "name"
+text = "Junpei"
 horizontal_alignment = 1
 
 [node name="Design" type="Label" parent="Container"]
