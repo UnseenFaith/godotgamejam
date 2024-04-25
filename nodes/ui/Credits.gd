@@ -4,7 +4,7 @@ signal end_credits
 
 var initial_speed = 175
 var speed = 175
-var line_height_px = 10
+var line_height_px = 9
 var _space_color = Color(0, 0.098, 0.157)
 
 @onready var _dlg = $Container/Blacksmith/Dialoge
@@ -43,6 +43,7 @@ var bart_scr = [
 	2000,
 	func(): _wait_for(WaitKeypress.ctor('ui_accept')),
 	func(): _scroll_dlg(4, 1.75),
+	1750,
 	func(): _speak_clear(),
 	func(): _speak(blurb[3]), # paid
 	func(): _wait_for(WaitKeypress.ctor('ui_accept')),
@@ -69,9 +70,9 @@ var bart_scr = [
 	2250,
 	func(): _speak_clear(),
 	func(): _speak(blurb[10]),
-	250,
+	600,
 	func(): _fade_out(_dlg, 1),
-	1000,
+	1250,
 	func(): _set_speed(initial_speed),
 	func(): _play_out_bart(),
 	func(): _switch_script(credits_scr)
